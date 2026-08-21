@@ -3,11 +3,14 @@ import json, re, time
 from flask import Flask, request as flask_request, jsonify
 
 try:
-    from duckduckgo_search import DDGS
+    from ddgs import DDGS
 except ImportError:
-    import subprocess, sys
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "duckduckgo-search", "-q"])
-    from duckduckgo_search import DDGS
+    try:
+        from duckduckgo_search import DDGS
+    except ImportError:
+        import subprocess, sys
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "ddgs", "-q"])
+        from ddgs import DDGS
 
 app = Flask(__name__)
 
@@ -34,8 +37,7 @@ def search():
     t0 = time.time()
 
     try:
-        with DDGS() as ddgs:
-            results = list(ddgs.text(query, region=lang_to_region(lang), max_results=8))
+        results = DDGS().text(query, region=lang_to_region(lang), max_results=8)
     except Exception:
         return jsonify({
             "answer": "I couldn't search the internet right now. Please try again later.",
