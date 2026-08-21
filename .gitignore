@@ -7,4 +7,5 @@ build/
 .env
 *.json
 !pyproject.toml
+!vercel.json
 .freebuff/

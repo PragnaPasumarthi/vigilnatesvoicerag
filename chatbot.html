@@ -191,15 +191,32 @@ const langNames = {
 
 // Search via DuckDuckGo Lite (no CORS issues)
 async function searchWeb(query) {
+  // Try server API first (works when running locally or on Vercel)
   try {
-    const lang = selectedLang === 'auto' ? detectLang(query) : selectedLang;
-    const langName = langNames[lang] || 'English';
-    // Use DuckDuckGo HTML search via a CORS proxy
+    const res = await fetch('/api/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query }),
+      signal: AbortSignal.timeout(15000)
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.answer && !data.error) {
+        // Store full answer for display
+        window._lastAnswer = data.answer;
+        window._lastSources = data.sources || [];
+        return data.sources || [];
+      }
+    }
+  } catch (e) {
+    console.log('Server API not available, trying direct search...');
+  }
+
+  // Fallback: DuckDuckGo HTML via CORS proxy
+  try {
     const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent('https://html.duckduckgo.com/html/?q=' + encodeURIComponent(query))}`;
     const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(8000) });
     const html = await res.text();
-
-    // Parse results from DuckDuckGo HTML
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
     const results = [];
@@ -215,9 +232,11 @@ async function searchWeb(query) {
         });
       }
     });
+    window._lastAnswer = null;
+    window._lastSources = results;
     return results.slice(0, 5);
-  } catch (e) {
-    console.log('Search error:', e);
+  } catch (e2) {
+    console.log('All search methods failed:', e2);
     return [];
   }
 }
@@ -270,12 +289,16 @@ async function send() {
 
   // Search the internet
   const results = await searchWeb(text);
-  const answer = buildAnswer(text, results);
+  // Use server answer if available (more complete), otherwise build from results
+  const answer = window._lastAnswer || buildAnswer(text, results);
+  const sources = window._lastSources || results;
+  window._lastAnswer = null;
+  window._lastSources = null;
 
   typing.remove();
 
   if (answer) {
-    addBotMsg(answer, results);
+    addBotMsg(answer, sources);
   } else {
     addBotMsg("I couldn't find a good answer for that. Could you try rephrasing?", []);
   }

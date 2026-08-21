@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "chatbot.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "api/search.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    { "src": "/api/search", "dest": "/api/search.py" },
+    { "src": "/", "dest": "/chatbot.html" },
+    { "src": "/chatbot.html", "dest": "/chatbot.html" },
+    { "src": "/index.html", "dest": "/index.html" },
+    { "src": "/(.*)", "dest": "/chatbot.html" }
+  ]
+}
