@@ -52,7 +52,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--green-deep
 /* HEADER */
 .header{padding:14px 24px;border-bottom:2px solid var(--green-mid);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:linear-gradient(135deg,var(--green-deep),var(--green-dark))}
 .header-left{display:flex;align-items:center;gap:12px}
-.header-logo{width:40px;height:40px;background:var(--yellow);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--green-deep);font-weight:800;font-size:18px;font-family:'Space Grotesk',sans-serif}
+.header-logo{width:42px;height:42px;border-radius:10px;overflow:hidden;flex-shrink:0}
 .header-title{font-weight:700;font-size:1.1rem;color:var(--white);font-family:'Space Grotesk',sans-serif}
 .header-sub{font-size:0.72rem;color:rgba(255,255,255,0.6)}
 .hh-badge{padding:4px 10px;border-radius:6px;background:var(--yellow);color:var(--green-deep);font-size:0.68rem;font-weight:700;font-family:'Space Grotesk',sans-serif}
@@ -65,7 +65,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--green-deep
 
 /* WELCOME */
 .welcome{text-align:center;padding:40px 20px 30px}
-.welcome-logo{width:72px;height:72px;background:var(--green-mid);border-radius:20px;display:flex;align-items:center;justify-content:center;color:var(--yellow);font-size:32px;font-weight:800;margin:0 auto 16px;font-family:'Space Grotesk',sans-serif;box-shadow:0 4px 20px rgba(26,122,58,0.3)}
+.welcome-logo{width:72px;height:72px;border-radius:20px;margin:0 auto 16px;box-shadow:0 4px 20px rgba(26,122,58,0.3);overflow:hidden}
 .welcome h1{font-size:1.5rem;font-weight:700;margin-bottom:6px;color:var(--green-deep);font-family:'Space Grotesk',sans-serif}
 .welcome p{color:var(--text2);font-size:0.9rem;line-height:1.6;max-width:400px;margin:0 auto}
 .welcome .hh-tag{display:inline-flex;align-items:center;gap:4px;margin-top:10px;padding:4px 12px;border-radius:20px;background:var(--green-pale);color:var(--green-mid);font-size:0.72rem;font-weight:600}
@@ -147,7 +147,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--green-deep
 <div class="app">
   <div class="header">
     <div class="header-left">
-      <div class="header-logo">V</div>
+      <img src="/hh_logo.png" alt="HackerHouse Logo" style="width:42px;height:42px;border-radius:10px;object-fit:cover;">
       <div>
         <div class="header-title">VigilantesVoiceRag</div>
         <div class="header-sub">Powered by HackerHouse Goa</div>
@@ -162,7 +162,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--green-deep
   <div class="messages" id="messages">
     <div class="messages-inner" id="inner">
       <div class="welcome" id="welcome">
-        <div class="welcome-logo">V</div>
+        <img src="/hh_logo.png" alt="HackerHouse Logo" style="width:72px;height:72px;border-radius:16px;object-fit:cover;">
         <h1>Aloha from VigilantesVoiceRag</h1>
         <p>Your AI assistant from HackerHouse Goa. Ask me anything — I search the internet and reply in any language.</p>
         <div class="hh-tag">🌴 Built at HackerHouse Goa</div>
