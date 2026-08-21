@@ -20,5 +20,6 @@
     { "src": "/chatbot.html", "dest": "/chatbot.html" },
     { "src": "/index.html", "dest": "/index.html" },
     { "src": "/(.*)", "dest": "/chatbot.html" }
-  ]
+  ],
+  "installCommand": "echo 'no install needed'"
 }
