@@ -1,1 +1,2 @@
-ddgs
+duckduckgo-search
+flask
