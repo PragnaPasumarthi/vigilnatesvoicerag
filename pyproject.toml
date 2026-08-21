@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "voice-rag"
+version = "0.1.0"
+description = "Voice-enabled Retrieval-Augmented Generation pipeline"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "httpx>=0.25",
+    "pydantic>=2.0",
+    "tiktoken>=0.5",
+]
+
+[project.optional-dependencies]
+embeddings = ["sentence-transformers>=2.2"]
+llm = ["openai>=1.0"]
+full = ["sentence-transformers>=2.2", "openai>=1.0"]
+dev = ["pytest>=7.0", "pytest-benchmark>=4.0"]
+
+[project.scripts]
+voice-rag = "voice_rag.cli:main"
+voice-rag-bench = "voice_rag.benchmark:main"
