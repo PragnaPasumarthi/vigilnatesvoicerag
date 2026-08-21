@@ -1,12 +1,10 @@
 """
-Vercel serverless function for internet search.
-Fetches full page content for complete answers.
+Vercel serverless function - smart concise answers.
 """
 import json
 import re
 import time
 import urllib.request
-import urllib.error
 from html.parser import HTMLParser
 
 try:
@@ -18,194 +16,156 @@ _ddgs = None
 
 
 class TextExtractor(HTMLParser):
-    """Extract readable text from HTML."""
     def __init__(self):
         super().__init__()
         self.result = []
         self.skip = False
         self.skip_tags = {'script', 'style', 'nav', 'header', 'footer', 'aside', 'noscript', 'iframe'}
-        self.current_tag = ''
-
     def handle_starttag(self, tag, attrs):
-        self.current_tag = tag
-        if tag in self.skip_tags:
-            self.skip = True
-
+        if tag in self.skip_tags: self.skip = True
     def handle_endtag(self, tag):
-        if tag in self.skip_tags:
-            self.skip = False
-
+        if tag in self.skip_tags: self.skip = False
     def handle_data(self, data):
         if not self.skip:
             text = data.strip()
-            if text and len(text) > 20:
-                self.result.append(text)
-
+            if text and len(text) > 15: self.result.append(text)
     def get_text(self):
-        return ' '.join(self.result[:50])  # First 50 meaningful chunks
+        return ' '.join(self.result[:40])
 
 
-def fetch_page_content(url, max_chars=3000):
-    """Fetch and extract text content from a URL."""
+def fetch_page_content(url, max_chars=2000):
     try:
-        req = urllib.request.Request(url, headers={
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-        })
-        with urllib.request.urlopen(req, timeout=5) as resp:
+        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib.request.urlopen(req, timeout=4) as resp:
             html = resp.read().decode('utf-8', errors='ignore')
-
-        extractor = TextExtractor()
-        extractor.feed(html)
-        text = extractor.get_text()
-
-        # Clean up
-        text = re.sub(r'\s+', ' ', text).strip()
+        ext = TextExtractor()
+        ext.feed(html)
+        text = re.sub(r'\s+', ' ', ext.get_text()).strip()
         return text[:max_chars]
-    except Exception:
+    except:
         return None
 
 
 def app(environ, start_response):
-    """WSGI application for Vercel."""
     method = environ.get("REQUEST_METHOD", "GET")
     path = environ.get("PATH_INFO", "/")
-
     headers = {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "POST, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type",
         "Content-Type": "application/json; charset=utf-8",
     }
-
     if method == "OPTIONS":
         start_response("204 No Content", list(headers.items()))
         return [b""]
-
     if method != "POST" or path != "/api/search":
-        body = json.dumps({"error": "Not found"}).encode()
         start_response("404 Not Found", list(headers.items()))
-        return [body]
+        return [json.dumps({"error": "Not found"}).encode()]
 
     try:
-        content_length = int(environ.get("CONTENT_LENGTH", 0))
-        request_body = environ["wsgi.input"].read(content_length)
-        data = json.loads(request_body)
+        length = int(environ.get("CONTENT_LENGTH", 0))
+        data = json.loads(environ["wsgi.input"].read(length))
         query = data.get("query", "").strip()
-
         if not query:
-            body = json.dumps({"answer": "Please ask a question."}).encode()
             start_response("200 OK", list(headers.items()))
-            return [body]
+            return [json.dumps({"answer": "Please ask a question."}).encode()]
 
         global _ddgs
-        if _ddgs is None:
-            _ddgs = DDGS()
+        if _ddgs is None: _ddgs = DDGS()
 
         t0 = time.perf_counter()
 
-        # Search DuckDuckGo
+        # Search
         results = []
-        search_results = _ddgs.text(query, max_results=5)
-        if hasattr(search_results, '__iter__'):
-            for item in search_results:
-                results.append({
-                    "title": item.get("title", ""),
-                    "body": item.get("body", ""),
-                    "url": item.get("href", ""),
-                })
+        for item in _ddgs.text(query, max_results=5):
+            results.append({"title": item.get("title",""), "body": item.get("body",""), "url": item.get("href","")})
 
-        # Score results by relevance to query
-        query_lower = query.lower()
-        query_words = set(query_lower.split())
+        # Score by relevance
+        q_words = set(query.lower().split())
+        stop = {'what','is','the','a','an','who','how','when','where','why','tell','me','about',
+                'can','you','do','does','in','on','at','to','for','of','and','or','my','your','this','that','it'}
+        meaningful = q_words - stop
+
         for r in results:
-            title_lower = r.get("title", "").lower()
-            body_lower = r.get("body", "").lower()
-            score = 0
-            # Exact phrase match in title is highest signal
-            if query_lower in title_lower:
-                score += 10
-            # Query words in title
-            score += sum(2 for w in query_words if w in title_lower)
-            # Query words in body
-            score += sum(1 for w in query_words if w in body_lower)
-            r["_score"] = score
+            title_l = r["title"].lower()
+            body_l = r["body"].lower()
+            r["_score"] = sum(2 for w in meaningful if w in title_l) + sum(1 for w in meaningful if w in body_l)
+            if query.lower() in title_l: r["_score"] += 10
 
-        # Sort by relevance
-        results.sort(key=lambda x: -x.get("_score", 0))
+        results.sort(key=lambda x: -x.get("_score",0))
 
-        # Fetch full content from most relevant result
+        # Fetch best source
         full_content = None
-        best_url = None
         for r in results:
-            if r.get("url") and r.get("_score", 0) > 0:
+            if r.get("url") and r.get("_score",0) > 0:
                 full_content = fetch_page_content(r["url"])
-                if full_content and len(full_content) > 200:
-                    best_url = r["url"]
-                    break
+                if full_content and len(full_content) > 100: break
 
         ms = (time.perf_counter() - t0) * 1000
 
-        # Build comprehensive answer
-        answer = _build_answer(query, results, full_content)
+        # Build SMART answer
+        answer = _smart_answer(query, results, full_content, meaningful)
 
-        response = {
-            "answer": answer or "I couldn't find a complete answer. Try rephrasing.",
-            "sources": [{"title": r["title"], "url": r["url"], "body": r["body"][:200]} for r in results[:3]],
-            "latency_ms": round(ms, 1),
-        }
-        body = json.dumps(response, ensure_ascii=False).encode()
         start_response("200 OK", list(headers.items()))
-        return [body]
+        return [json.dumps({
+            "answer": answer,
+            "sources": [{"title": r["title"], "url": r["url"]} for r in results[:3]],
+            "latency_ms": round(ms, 1),
+        }, ensure_ascii=False).encode()]
 
     except Exception as e:
-        body = json.dumps({"error": str(e), "answer": f"Search error: {e}"}).encode()
         start_response("200 OK", list(headers.items()))
-        return [body]
+        return [json.dumps({"error": str(e), "answer": f"Error: {e}"}).encode()]
 
 
-def _build_answer(query, results, full_content=None):
-    """Build a complete answer from search results and full page content."""
-    if not results:
-        return None
+def _smart_answer(query, results, full_content, meaningful):
+    """Build a ChatGPT-style concise answer."""
 
-    query_words = set(query.lower().split())
-    stop = {'what','is','the','a','an','who','how','when','where','why','tell','me','about',
-            'can','you','do','does','in','on','at','to','for','of','and','or','my','your','this','that','it'}
-    meaningful = query_words - stop
-
-    parts = []
-
-    # 1. Use full page content if available (most complete)
-    if full_content and len(full_content) > 200:
-        # Extract relevant paragraphs
-        paragraphs = full_content.split('.')
+    # 1. Extract the most relevant sentence(s) from full content
+    if full_content:
+        sentences = re.split(r'(?<=[.!?])\s+', full_content)
         relevant = []
-        for p in paragraphs:
-            p = p.strip()
-            if len(p) > 30:
-                # Check if paragraph is relevant to query
-                p_lower = p.lower()
-                if any(w in p_lower for w in meaningful):
-                    relevant.append(p + '.')
-                elif len(relevant) < 3:  # Include first few for context
-                    relevant.append(p + '.')
+        for s in sentences:
+            s = s.strip()
+            if len(s) < 20: continue
+            s_lower = s.lower()
+            # Score this sentence
+            score = sum(1 for w in meaningful if w in s_lower)
+            # Boost for definitions, key facts
+            if re.search(r'\b(is|are|was|were|founded|established|located|capital)\b', s_lower):
+                score += 2
+            # Boost for sentences containing the query
+            if any(w in s_lower for w in meaningful):
+                score += 1
+            if score > 0:
+                relevant.append((score, s))
 
+        relevant.sort(key=lambda x: -x[0])
+
+        # Take top 2-3 most relevant sentences
         if relevant:
-            parts.append('\n\n'.join(relevant[:8]))
+            parts = []
+            seen = set()
+            for score, s in relevant[:3]:
+                # Clean
+                s = re.sub(r'^\[\d+\]', '', s).strip()
+                if s and s[:50] not in seen:
+                    seen.add(s[:50])
+                    parts.append(s)
+            if parts:
+                return ' '.join(parts)
 
-    # 2. Add search snippets for additional context
-    for r in results[:3]:
+    # 2. Fallback: use best search snippet (just the body, cleaned)
+    for r in results[:2]:
         body = r.get("body", "")
-        title = r.get("title", "")
-        if not body:
-            continue
-        # Clean date prefixes
-        cleaned = re.sub(r'^\d+\s+(hours?|days?|weeks?|months?|minutes?)\s+ago\s*[-–—]\s*', '', body)
+        if not body: continue
+        # Clean date prefix
+        cleaned = re.sub(r'^\d+\s+(hours?|days?|weeks?|months?)\s+ago\s*[-–—]\s*', '', body)
         cleaned = re.sub(r'^(Today|Yesterday)\s*[-–—]\s*', '', cleaned)
         cleaned = re.sub(r'^[A-Z][a-z]+\s+\d{1,2},\s*\d{4}\s*[–—-]\s*', '', cleaned)
         if cleaned.strip() and len(cleaned) > 30:
-            # Check it's not already in parts
-            if not any(cleaned[:50] in p for p in parts):
-                parts.append(cleaned.strip())
+            # Take just the first 1-2 sentences
+            sents = re.split(r'(?<=[.!?])\s+', cleaned)
+            return ' '.join(sents[:2])
 
-    return '\n\n'.join(parts) if parts else None
+    return "I couldn't find a concise answer. Try rephrasing your question."
