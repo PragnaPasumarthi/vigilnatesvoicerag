@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>vigilnatesvoicerag</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f7f6f3;--white:#fff;--text:#1a1a1a;--text2:#6b6b6b;--text3:#999;--accent:#c45d2c;--accent2:#e8773e;--border:#e5e5e5;--user-bg:#c45d2c;--bot-bg:#fff}
+html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
+.app{display:flex;height:100vh;flex-direction:column;max-width:900px;margin:0 auto;background:var(--white);box-shadow:0 0 60px rgba(0,0,0,0.06)}
+.header{padding:14px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.header-left{display:flex;align-items:center;gap:12px}
+.header-logo{width:36px;height:36px;background:var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px}
+.header-title{font-weight:700;font-size:1rem}
+.header-sub{font-size:0.75rem;color:var(--text3)}
+.tts-toggle{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--white);cursor:pointer;font-size:0.78rem;color:var(--text2);transition:all .2s}
+.tts-toggle:hover{border-color:var(--accent);color:var(--accent)}
+.tts-toggle.active{background:var(--accent-light);border-color:var(--accent);color:var(--accent)}
+.messages{flex:1;overflow-y:auto;padding:24px 20px;scroll-behavior:smooth}
+.messages-inner{max-width:700px;margin:0 auto}
+.welcome{text-align:center;padding:60px 20px 40px}
+.welcome-logo{width:64px;height:64px;background:var(--accent);border-radius:20px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:28px;font-weight:800;margin:0 auto 20px}
+.welcome h1{font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.welcome p{color:var(--text2);font-size:0.95rem;line-height:1.6;max-width:440px;margin:0 auto}
+.welcome .langs{display:flex;gap:6px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.lang-chip{padding:4px 10px;border-radius:6px;font-size:0.72rem;font-weight:600;background:var(--bg);color:var(--text3);cursor:pointer;transition:all .2s;border:1px solid transparent}
+.lang-chip:hover,.lang-chip.active{background:var(--accent-light);color:var(--accent);border-color:var(--accent)}
+.suggestions{display:flex;flex-direction:column;gap:8px;max-width:440px;margin:24px auto 0}
+.suggestion{padding:12px 18px;border:1px solid var(--border);border-radius:12px;font-size:0.88rem;cursor:pointer;transition:all .2s;color:var(--text);text-align:left;background:var(--white)}
+.suggestion:hover{border-color:var(--accent);background:#fdf5f0}
+.msg{display:flex;gap:12px;margin-bottom:24px;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.msg.user{flex-direction:row-reverse}
+.msg .avatar{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;font-weight:700;margin-top:2px}
+.msg.user .avatar{background:var(--user-bg);color:#fff}
+.msg.bot .avatar{background:#e8f5f0;color:#1a7a6d}
+.msg .content{max-width:80%;line-height:1.7;font-size:0.93rem}
+.msg.user .content{text-align:right}
+.msg .bubble{padding:12px 16px;border-radius:16px;display:inline-block;text-align:left;max-width:100%;word-wrap:break-word}
+.msg.user .bubble{background:var(--user-bg);color:#fff;border-bottom-right-radius:4px}
+.msg.bot .bubble{background:var(--bot-bg);color:var(--text);border:1px solid var(--border);border-bottom-left-radius:4px}
+.msg .meta-row{display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap}
+.msg.user .meta-row{justify-content:flex-end}
+.msg .time{font-size:0.7rem;color:var(--text3)}
+.msg .source-badge{font-size:0.68rem;padding:2px 7px;border-radius:5px;background:var(--bg);color:var(--text3);display:flex;align-items:center;gap:3px}
+.msg .source-badge.web{background:#e8f0f8;color:#3a6ea5}
+.msg .source-badge.local{background:#e8f3eb;color:#4a8c5c}
+.tts-btn{width:26px;height:26px;border-radius:6px;border:1px solid var(--border);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .2s;color:var(--text3)}
+.tts-btn:hover{border-color:var(--accent);color:var(--accent)}
+.tts-btn.speaking{background:var(--accent);color:#fff;border-color:var(--accent)}
+.sources-list{margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+.sources-list a{display:block;font-size:0.75rem;color:var(--accent);text-decoration:none;padding:3px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sources-list a:hover{text-decoration:underline}
+.typing{display:flex;gap:12px;margin-bottom:24px;animation:fadeIn .3s}
+.typing .avatar{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;font-weight:700;background:#e8f5f0;color:#1a7a6d}
+.typing-dots{display:flex;gap:5px;padding:16px 20px;background:var(--white);border:1px solid var(--border);border-radius:16px;border-bottom-left-radius:4px}
+.typing-dots span{width:8px;height:8px;border-radius:50%;background:var(--text3);animation:bounce 1.4s infinite}
+.typing-dots span:nth-child(2){animation-delay:.2s}
+.typing-dots span:nth-child(3){animation-delay:.4s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-6px);opacity:1}}
+.input-area{padding:14px 20px 18px;border-top:1px solid var(--border);flex-shrink:0}
+.input-row{display:flex;gap:8px;align-items:flex-end;max-width:700px;margin:0 auto}
+.input-box{flex:1;display:flex;align-items:flex-end;background:var(--white);border:1.5px solid var(--border);border-radius:24px;padding:10px 16px;transition:border-color .2s}
+.input-box:focus-within{border-color:var(--accent)}
+.input-box textarea{flex:1;border:none;outline:none;resize:none;font-family:inherit;font-size:0.93rem;line-height:1.5;max-height:100px;min-height:22px;background:transparent;color:var(--text)}
+.input-box textarea::placeholder{color:var(--text3)}
+.btn-icon{width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:all .2s;flex-shrink:0}
+.btn-send{background:var(--accent);color:#fff}
+.btn-send:hover{background:var(--accent2)}
+.btn-send:disabled{opacity:.3;cursor:not-allowed}
+.btn-voice{background:var(--white);color:var(--text2);border:1.5px solid var(--border)}
+.btn-voice:hover{border-color:var(--accent);color:var(--accent)}
+.btn-voice.recording{background:#e06356;color:#fff;border-color:#e06356;animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(224,99,86,.4)}50%{box-shadow:0 0 0 10px rgba(224,99,86,0)}}
+.hint{text-align:center;margin-top:6px;font-size:0.7rem;color:var(--text3)}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="header-left">
+      <div class="header-logo">V</div>
+      <div>
+        <div class="header-title">vigilnatesvoicerag</div>
+        <div class="header-sub">Voice & internet-powered assistant</div>
+      </div>
+    </div>
+    <button class="tts-toggle" id="ttsToggle" onclick="toggleTTS()">🔊 Voice replies: <strong id="ttsLabel">OFF</strong></button>
+  </div>
+
+  <div class="messages" id="messages">
+    <div class="messages-inner" id="inner">
+      <div class="welcome" id="welcome">
+        <div class="welcome-logo">V</div>
+        <h1>Hi, I'm vigilnatesvoicerag</h1>
+        <p>I search the internet and my knowledge base to answer your questions. Works in multiple languages. Use voice or text.</p>
+        <div class="langs">
+          <span class="lang-chip active" data-lang="auto">Auto-detect</span>
+          <span class="lang-chip" data-lang="en">English</span>
+          <span class="lang-chip" data-lang="hi">Hindi</span>
+          <span class="lang-chip" data-lang="es">Spanish</span>
+          <span class="lang-chip" data-lang="fr">French</span>
+          <span class="lang-chip" data-lang="de">German</span>
+          <span class="lang-chip" data-lang="ja">Japanese</span>
+          <span class="lang-chip" data-lang="ar">Arabic</span>
+        </div>
+        <div class="suggestions">
+          <div class="suggestion" onclick="ask(this)">What is the capital of France?</div>
+          <div class="suggestion" onclick="ask(this)">Explain quantum computing in simple terms</div>
+          <div class="suggestion" onclick="ask(this)">What is the weather today?</div>
+          <div class="suggestion" onclick="ask(this)">Latest news in AI technology</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="input-area">
+    <div class="input-row">
+      <button class="btn-icon btn-voice" id="voiceBtn" onclick="toggleVoice()" title="Speak">🎤</button>
+      <div class="input-box">
+        <textarea id="input" rows="1" placeholder="Ask me anything..." onkeydown="onKey(event)" oninput="resize(this)"></textarea>
+      </div>
+      <button class="btn-icon btn-send" id="sendBtn" onclick="send()" disabled>↑</button>
+    </div>
+    <div class="hint">Press Enter to send · Click 🎤 to speak · Toggle 🔊 for voice replies</div>
+  </div>
+</div>
+
+<script>
+const API = '/api/chat';
+let recording = false, recog = null;
+let ttsEnabled = false;
+let selectedLang = 'auto';
+const synth = window.speechSynthesis;
+
+// Language chip selection
+document.querySelectorAll('.lang-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.lang-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    selectedLang = chip.dataset.lang;
+  });
+});
+
+function toggleTTS() {
+  ttsEnabled = !ttsEnabled;
+  document.getElementById('ttsLabel').textContent = ttsEnabled ? 'ON' : 'OFF';
+  document.getElementById('ttsToggle').classList.toggle('active', ttsEnabled);
+}
+
+function resize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+  document.getElementById('sendBtn').disabled = !el.value.trim();
+}
+function onKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+}
+function ask(el) {
+  document.getElementById('input').value = el.textContent;
+  resize(document.getElementById('input'));
+  send();
+}
+function now() {
+  return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+async function send() {
+  const input = document.getElementById('input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const w = document.getElementById('welcome');
+  if (w) w.remove();
+
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('sendBtn').disabled = true;
+
+  addMsg('user', text);
+  const typing = showTyping();
+
+  try {
+    const res = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text, language: selectedLang })
+    });
+    const data = await res.json();
+    typing.remove();
+    addMsg('bot', data);
+  } catch (err) {
+    typing.remove();
+    addMsg('bot', { answer: 'Connection error. Please try again.', sources: [], answer_type: 'error' });
+  }
+}
+
+function addMsg(role, data) {
+  const inner = document.getElementById('inner');
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+
+  if (role === 'user') {
+    div.innerHTML = `
+      <div class="avatar">👤</div>
+      <div class="content">
+        <div class="bubble">${esc(typeof data === 'string' ? data : data.answer)}</div>
+        <div class="meta-row"><span class="time">${now()}</span></div>
+      </div>`;
+  } else {
+    const answer = typeof data === 'string' ? data : (data.answer || 'No answer.');
+    const sources = data.sources || [];
+    const answerType = data.answer_type || 'unknown';
+    const lang = data.language || 'en';
+
+    // Source badge
+    let badgeHtml = '';
+    if (answerType === 'internet') {
+      badgeHtml = '<span class="source-badge web">🌐 Internet</span>';
+    } else if (answerType === 'rag') {
+      badgeHtml = '<span class="source-badge local">📚 Knowledge base</span>';
+    }
+
+    // TTS button
+    const ttsId = 'tts_' + Date.now();
+    const ttsHtml = `<button class="tts-btn" id="${ttsId}" onclick="speakText(this, '${esc(answer).replace(/'/g, "\\'")}', '${lang}')" title="Listen">🔊</button>`;
+
+    // Sources links
+    let sourcesHtml = '';
+    if (sources.length > 0) {
+      sourcesHtml = '<div class="sources-list">';
+      sources.forEach(s => {
+        if (s.url) {
+          sourcesHtml += `<a href="${esc(s.url)}" target="_blank" rel="noopener">🔗 ${esc(s.title || s.url)}</a>`;
+        }
+      });
+      sourcesHtml += '</div>';
+    }
+
+    div.innerHTML = `
+      <div class="avatar">V</div>
+      <div class="content">
+        <div class="bubble">${esc(answer).replace(/\n/g, '<br>')}${sourcesHtml}</div>
+        <div class="meta-row">
+          <span class="time">${now()}</span>
+          ${badgeHtml}
+          ${ttsHtml}
+        </div>
+      </div>`;
+
+    // Auto-speak if TTS is enabled
+    if (ttsEnabled) {
+      setTimeout(() => speakText(null, answer, lang), 300);
+    }
+  }
+
+  inner.appendChild(div);
+  scroll();
+}
+
+function showTyping() {
+  const inner = document.getElementById('inner');
+  const div = document.createElement('div');
+  div.className = 'typing';
+  div.innerHTML = `<div class="avatar">V</div><div class="typing-dots"><span></span><span></span><span></span></div>`;
+  inner.appendChild(div);
+  scroll();
+  return div;
+}
+
+function scroll() {
+  const m = document.getElementById('messages');
+  setTimeout(() => m.scrollTop = m.scrollHeight, 50);
+}
+
+// TEXT-TO-SPEECH
+function speakText(btn, text, lang) {
+  synth.cancel(); // Stop any current speech
+
+  const utterance = new SpeechSynthesisUtterance(text);
+
+  // Map language codes
+  const langMap = {
+    'en': 'en-US', 'hi': 'hi-IN', 'es': 'es-ES', 'fr': 'fr-FR',
+    'de': 'de-DE', 'ja': 'ja-JP', 'ar': 'ar-SA', 'bn': 'bn-BD',
+    'ta': 'ta-IN', 'te': 'te-IN', 'zh': 'zh-CN', 'ko': 'ko-KR',
+    'pt': 'pt-BR', 'ru': 'ru-RU', 'it': 'it-IT'
+  };
+  utterance.lang = langMap[lang] || 'en-US';
+  utterance.rate = 1.0;
+  utterance.pitch = 1.0;
+
+  if (btn) {
+    btn.classList.add('speaking');
+    utterance.onend = () => btn.classList.remove('speaking');
+    utterance.onerror = () => btn.classList.remove('speaking');
+  }
+
+  synth.speak(utterance);
+}
+
+// VOICE INPUT (STT)
+function toggleVoice() {
+  recording ? stopRec() : startRec();
+}
+function startRec() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    alert('Voice input not supported. Try Chrome.');
+    return;
+  }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recog = new SR();
+  recog.continuous = false;
+  recog.interimResults = false;
+
+  // Set language based on selection
+  const langMap = {
+    'auto': 'en-US', 'en': 'en-US', 'hi': 'hi-IN', 'es': 'es-ES',
+    'fr': 'fr-FR', 'de': 'de-DE', 'ja': 'ja-JP', 'ar': 'ar-SA'
+  };
+  recog.lang = langMap[selectedLang] || 'en-US';
+
+  recog.onstart = () => {
+    recording = true;
+    document.getElementById('voiceBtn').classList.add('recording');
+    document.getElementById('voiceBtn').textContent = '⏹';
+    document.getElementById('input').placeholder = 'Listening...';
+  };
+  recog.onresult = (e) => {
+    const transcript = e.results[0][0].transcript;
+    document.getElementById('input').value = transcript;
+    resize(document.getElementById('input'));
+    setTimeout(() => send(), 200);
+  };
+  recog.onend = stopRec;
+  recog.onerror = stopRec;
+  recog.start();
+}
+function stopRec() {
+  recording = false;
+  document.getElementById('voiceBtn').classList.remove('recording');
+  document.getElementById('voiceBtn').textContent = '🎤';
+  document.getElementById('input').placeholder = 'Ask me anything...';
+  if (recog) try { recog.stop(); } catch(e) {}
+}
+
+document.getElementById('input').focus();
+</script>
+</body>
+</html>
