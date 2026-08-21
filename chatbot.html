@@ -3,99 +3,171 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>VigilantesVoiceRag</title>
+<title>VigilantesVoiceRag — HackerHouse Goa</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#f7f6f3;--white:#fff;--text:#1a1a1a;--text2:#6b6b6b;--text3:#999;--accent:#c45d2c;--accent2:#e8773e;--border:#e5e5e5;--user-bg:#c45d2c;--bot-bg:#fff}
-html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
-.app{display:flex;height:100vh;flex-direction:column;max-width:900px;margin:0 auto;background:var(--white);box-shadow:0 0 60px rgba(0,0,0,0.06)}
-.header{padding:14px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+:root{
+  --green-deep:#0d3b1e;--green-dark:#145a2b;--green-mid:#1a7a3a;
+  --green-light:#2ea85a;--green-pale:#e8f5ec;
+  --yellow:#f5c518;--yellow-dark:#d4a80e;--yellow-light:#fff8dc;
+  --sand:#faf6ee;--sand-dark:#f0e8d8;--white:#fff;
+  --text:#1a1a1a;--text2:#5a5a5a;--text3:#8a8a8a;
+  --border:#d4e8d8;
+}
+html,body{height:100%;font-family:'Inter',sans-serif;background:var(--green-deep);color:var(--text);overflow:hidden}
+
+/* BEACH BACKGROUND */
+.beach-bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:linear-gradient(180deg,#0d3b1e 0%,#145a2b 30%,#1a7a3a 60%,#2ea85a 100%)}
+.beach-bg .sun{position:absolute;top:8%;left:50%;transform:translateX(-50%);width:180px;height:180px;background:var(--yellow);border-radius:50%;box-shadow:0 0 80px rgba(245,197,24,0.4),0 0 160px rgba(245,197,24,0.2)}
+.beach-bg .sun-rays{position:absolute;top:calc(8% - 20px);left:50%;transform:translateX(-50%);width:220px;height:220px}
+.beach-bg .ray{position:absolute;top:50%;left:50%;width:3px;height:60px;background:var(--yellow);border-radius:2px;transform-origin:bottom center;opacity:0.6}
+.beach-bg .ray:nth-child(1){transform:translate(-50%,-100%) rotate(0deg)}
+.beach-bg .ray:nth-child(2){transform:translate(-50%,-100%) rotate(45deg)}
+.beach-bg .ray:nth-child(3){transform:translate(-50%,-100%) rotate(90deg)}
+.beach-bg .ray:nth-child(4){transform:translate(-50%,-100%) rotate(135deg)}
+.beach-bg .ray:nth-child(5){transform:translate(-50%,-100%) rotate(180deg)}
+.beach-bg .ray:nth-child(6){transform:translate(-50%,-100%) rotate(225deg)}
+.beach-bg .ray:nth-child(7){transform:translate(-50%,-100%) rotate(270deg)}
+.beach-bg .ray:nth-child(8){transform:translate(-50%,-100%) rotate(315deg)}
+.beach-bg .ocean{position:absolute;bottom:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(30,120,80,0.6) 0%,rgba(20,90,50,0.8) 100%)}
+.beach-bg .wave{position:absolute;width:200%;height:40px;left:-50%;animation:wave 8s ease-in-out infinite}
+.beach-bg .wave:nth-child(1){bottom:44%;opacity:0.3}
+.beach-bg .wave:nth-child(2){bottom:42%;opacity:0.2;animation-delay:-2s}
+.beach-bg .wave svg{width:100%;height:100%}
+@keyframes wave{0%,100%{transform:translateX(0)}50%{transform:translateX(-25%)}}
+.beach-bg .palm{position:absolute;bottom:35%;font-size:4rem;opacity:0.15}
+.beach-bg .palm.left{left:5%}
+.beach-bg .palm.right{right:5%}
+.beach-bg .palm.left2{left:15%;bottom:30%;font-size:3rem}
+.beach-bg .palm.right2{right:15%;bottom:32%;font-size:3.5rem}
+.beach-bg .sand-strip{position:absolute;bottom:0;left:0;right:0;height:35%;background:linear-gradient(180deg,rgba(250,246,238,0.15) 0%,rgba(250,246,238,0.25) 100%)}
+.beach-bg .hut{position:absolute;bottom:33%;right:12%;width:60px;height:45px;background:var(--sand-dark);border-radius:4px 4px 0 0;opacity:0.12}
+.beach-bg .hut::before{content:'';position:absolute;top:-20px;left:-5px;right:-5px;height:25px;background:#8B6914;border-radius:2px;clip-path:polygon(0 100%,50% 0,100% 100%)}
+
+/* APP */
+.app{position:relative;z-index:1;display:flex;height:100vh;flex-direction:column;max-width:900px;margin:0 auto;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);box-shadow:0 0 80px rgba(0,0,0,0.3)}
+
+/* HEADER */
+.header{padding:14px 24px;border-bottom:2px solid var(--green-mid);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:linear-gradient(135deg,var(--green-deep),var(--green-dark))}
 .header-left{display:flex;align-items:center;gap:12px}
-.header-logo{width:36px;height:36px;background:var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px}
-.header-title{font-weight:700;font-size:1rem}
-.header-sub{font-size:0.75rem;color:var(--text3)}
-.tts-toggle{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--white);cursor:pointer;font-size:0.78rem;color:var(--text2);transition:all .2s}
-.tts-toggle:hover,.tts-toggle.active{border-color:var(--accent);color:var(--accent);background:#fdf5f0}
-.messages{flex:1;overflow-y:auto;padding:24px 20px;scroll-behavior:smooth}
+.header-logo{width:40px;height:40px;background:var(--yellow);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--green-deep);font-weight:800;font-size:18px;font-family:'Space Grotesk',sans-serif}
+.header-title{font-weight:700;font-size:1.1rem;color:var(--white);font-family:'Space Grotesk',sans-serif}
+.header-sub{font-size:0.72rem;color:rgba(255,255,255,0.6)}
+.hh-badge{padding:4px 10px;border-radius:6px;background:var(--yellow);color:var(--green-deep);font-size:0.68rem;font-weight:700;font-family:'Space Grotesk',sans-serif}
+.tts-toggle{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:transparent;cursor:pointer;font-size:0.78rem;color:rgba(255,255,255,0.7);transition:all .2s}
+.tts-toggle:hover,.tts-toggle.active{border-color:var(--yellow);color:var(--yellow);background:rgba(245,197,24,0.1)}
+
+/* MESSAGES */
+.messages{flex:1;overflow-y:auto;padding:24px 20px;scroll-behavior:smooth;background:rgba(255,255,255,0.6)}
 .messages-inner{max-width:700px;margin:0 auto}
-.welcome{text-align:center;padding:60px 20px 40px}
-.welcome-logo{width:64px;height:64px;background:var(--accent);border-radius:20px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:28px;font-weight:800;margin:0 auto 20px}
-.welcome h1{font-size:1.6rem;font-weight:700;margin-bottom:8px}
-.welcome p{color:var(--text2);font-size:0.95rem;line-height:1.6;max-width:440px;margin:0 auto}
-.langs{display:flex;gap:6px;justify-content:center;margin-top:16px;flex-wrap:wrap}
-.lang-chip{padding:5px 12px;border-radius:8px;font-size:0.75rem;font-weight:600;background:var(--bg);color:var(--text3);cursor:pointer;transition:all .2s;border:1px solid transparent}
-.lang-chip:hover,.lang-chip.active{background:var(--accent-light);color:var(--accent);border-color:var(--accent)}
-.suggestions{display:flex;flex-direction:column;gap:8px;max-width:440px;margin:24px auto 0}
-.suggestion{padding:12px 18px;border:1px solid var(--border);border-radius:12px;font-size:0.88rem;cursor:pointer;transition:all .2s;color:var(--text);text-align:left;background:var(--white)}
-.suggestion:hover{border-color:var(--accent);background:#fdf5f0}
-.msg{display:flex;gap:12px;margin-bottom:24px;animation:fadeIn .3s}
+
+/* WELCOME */
+.welcome{text-align:center;padding:40px 20px 30px}
+.welcome-logo{width:72px;height:72px;background:var(--green-mid);border-radius:20px;display:flex;align-items:center;justify-content:center;color:var(--yellow);font-size:32px;font-weight:800;margin:0 auto 16px;font-family:'Space Grotesk',sans-serif;box-shadow:0 4px 20px rgba(26,122,58,0.3)}
+.welcome h1{font-size:1.5rem;font-weight:700;margin-bottom:6px;color:var(--green-deep);font-family:'Space Grotesk',sans-serif}
+.welcome p{color:var(--text2);font-size:0.9rem;line-height:1.6;max-width:400px;margin:0 auto}
+.welcome .hh-tag{display:inline-flex;align-items:center;gap:4px;margin-top:10px;padding:4px 12px;border-radius:20px;background:var(--green-pale);color:var(--green-mid);font-size:0.72rem;font-weight:600}
+.langs{display:flex;gap:5px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.lang-chip{padding:4px 10px;border-radius:6px;font-size:0.72rem;font-weight:600;background:var(--green-pale);color:var(--green-mid);cursor:pointer;transition:all .2s;border:1px solid transparent}
+.lang-chip:hover,.lang-chip.active{background:var(--green-mid);color:var(--white);border-color:var(--green-mid)}
+.suggestions{display:flex;flex-direction:column;gap:7px;max-width:400px;margin:18px auto 0}
+.suggestion{padding:10px 16px;border:1.5px solid var(--border);border-radius:10px;font-size:0.85rem;cursor:pointer;transition:all .2s;color:var(--text);text-align:left;background:var(--white)}
+.suggestion:hover{border-color:var(--green-mid);background:var(--green-pale);color:var(--green-deep)}
+
+/* MESSAGES */
+.msg{display:flex;gap:10px;margin-bottom:20px;animation:fadeIn .3s}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .msg.user{flex-direction:row-reverse}
 .msg .avatar{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;font-weight:700;margin-top:2px}
-.msg.user .avatar{background:var(--user-bg);color:#fff}
-.msg.bot .avatar{background:#e8f5f0;color:#1a7a6d}
-.msg .content{max-width:82%;line-height:1.7;font-size:0.93rem}
+.msg.user .avatar{background:var(--green-mid);color:var(--white)}
+.msg.bot .avatar{background:var(--yellow);color:var(--green-deep);font-family:'Space Grotesk',sans-serif}
+.msg .content{max-width:82%;line-height:1.7;font-size:0.92rem}
 .msg.user .content{text-align:right}
-.msg .bubble{padding:14px 18px;border-radius:16px;display:inline-block;text-align:left;max-width:100%;word-wrap:break-word}
-.msg.user .bubble{background:var(--user-bg);color:#fff;border-bottom-right-radius:4px}
-.msg.bot .bubble{background:var(--bot-bg);color:var(--text);border:1px solid var(--border);border-bottom-left-radius:4px}
-.msg .meta-row{display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap}
+.msg .bubble{padding:12px 16px;border-radius:14px;display:inline-block;text-align:left;max-width:100%;word-wrap:break-word}
+.msg.user .bubble{background:var(--green-mid);color:var(--white);border-bottom-right-radius:4px}
+.msg.bot .bubble{background:var(--white);color:var(--text);border:1.5px solid var(--border);border-bottom-left-radius:4px}
+.msg .meta-row{display:flex;align-items:center;gap:6px;margin-top:4px;flex-wrap:wrap}
 .msg.user .meta-row{justify-content:flex-end}
-.msg .time{font-size:0.7rem;color:var(--text3)}
-.source-badge{font-size:0.68rem;padding:2px 7px;border-radius:5px;background:#e8f0f8;color:#3a6ea5;display:flex;align-items:center;gap:3px}
-.tts-btn{width:26px;height:26px;border-radius:6px;border:1px solid var(--border);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .2s;color:var(--text3)}
-.tts-btn:hover{border-color:var(--accent);color:var(--accent)}
-.tts-btn.speaking{background:var(--accent);color:#fff;border-color:var(--accent)}
-.sources-list{margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
-.sources-list a{display:block;font-size:0.78rem;color:var(--accent);text-decoration:none;padding:3px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.msg .time{font-size:0.68rem;color:var(--text3)}
+.source-badge{font-size:0.66rem;padding:2px 7px;border-radius:5px;background:var(--green-pale);color:var(--green-mid);font-weight:600}
+.tts-btn{width:24px;height:24px;border-radius:5px;border:1px solid var(--border);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .2s;color:var(--text3)}
+.tts-btn:hover{border-color:var(--green-mid);color:var(--green-mid)}
+.tts-btn.speaking{background:var(--green-mid);color:var(--white);border-color:var(--green-mid)}
+.sources-list{margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+.sources-list a{display:block;font-size:0.75rem;color:var(--green-mid);text-decoration:none;padding:2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sources-list a:hover{text-decoration:underline}
-.typing{display:flex;gap:12px;margin-bottom:24px;animation:fadeIn .3s}
-.typing .avatar{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;font-weight:700;background:#e8f5f0;color:#1a7a6d}
-.typing-dots{display:flex;gap:5px;padding:16px 20px;background:var(--white);border:1px solid var(--border);border-radius:16px;border-bottom-left-radius:4px}
-.typing-dots span{width:8px;height:8px;border-radius:50%;background:var(--text3);animation:bounce 1.4s infinite}
+.typing{display:flex;gap:10px;margin-bottom:20px;animation:fadeIn .3s}
+.typing .avatar{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;font-weight:700;background:var(--yellow);color:var(--green-deep);font-family:'Space Grotesk',sans-serif}
+.typing-dots{display:flex;gap:4px;padding:14px 18px;background:var(--white);border:1.5px solid var(--border);border-radius:14px;border-bottom-left-radius:4px}
+.typing-dots span{width:7px;height:7px;border-radius:50%;background:var(--green-mid);animation:bounce 1.4s infinite}
 .typing-dots span:nth-child(2){animation-delay:.2s}
 .typing-dots span:nth-child(3){animation-delay:.4s}
-@keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-6px);opacity:1}}
-.input-area{padding:14px 20px 18px;border-top:1px solid var(--border);flex-shrink:0}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
+
+/* INPUT */
+.input-area{padding:12px 20px 16px;border-top:2px solid var(--green-mid);flex-shrink:0;background:rgba(255,255,255,0.9)}
 .input-row{display:flex;gap:8px;align-items:flex-end;max-width:700px;margin:0 auto}
-.input-box{flex:1;display:flex;align-items:flex-end;background:var(--white);border:1.5px solid var(--border);border-radius:24px;padding:10px 16px;transition:border-color .2s}
-.input-box:focus-within{border-color:var(--accent)}
-.input-box textarea{flex:1;border:none;outline:none;resize:none;font-family:inherit;font-size:0.93rem;line-height:1.5;max-height:100px;min-height:22px;background:transparent;color:var(--text)}
+.input-box{flex:1;display:flex;align-items:flex-end;background:var(--white);border:1.5px solid var(--border);border-radius:22px;padding:10px 16px;transition:border-color .2s}
+.input-box:focus-within{border-color:var(--green-mid)}
+.input-box textarea{flex:1;border:none;outline:none;resize:none;font-family:inherit;font-size:0.92rem;line-height:1.5;max-height:100px;min-height:22px;background:transparent;color:var(--text)}
 .input-box textarea::placeholder{color:var(--text3)}
 .btn-icon{width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:all .2s;flex-shrink:0}
-.btn-send{background:var(--accent);color:#fff}
-.btn-send:hover{background:var(--accent2)}
+.btn-send{background:var(--green-mid);color:var(--white)}
+.btn-send:hover{background:var(--green-dark)}
 .btn-send:disabled{opacity:.3;cursor:not-allowed}
 .btn-voice{background:var(--white);color:var(--text2);border:1.5px solid var(--border)}
-.btn-voice:hover{border-color:var(--accent);color:var(--accent)}
+.btn-voice:hover{border-color:var(--green-mid);color:var(--green-mid)}
 .btn-voice.recording{background:#e06356;color:#fff;border-color:#e06356;animation:pulse 1.2s infinite}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(224,99,86,.4)}50%{box-shadow:0 0 0 10px rgba(224,99,86,0)}}
-.hint{text-align:center;margin-top:6px;font-size:0.7rem;color:var(--text3)}
+.hint{text-align:center;margin-top:6px;font-size:0.68rem;color:var(--text3)}
+.hint a{color:var(--green-mid);text-decoration:none;font-weight:600}
 </style>
 </head>
 <body>
+<!-- BEACH BACKGROUND -->
+<div class="beach-bg">
+  <div class="sun"></div>
+  <div class="sun-rays">
+    <div class="ray"></div><div class="ray"></div><div class="ray"></div><div class="ray"></div>
+    <div class="ray"></div><div class="ray"></div><div class="ray"></div><div class="ray"></div>
+  </div>
+  <div class="wave"><svg viewBox="0 0 1200 40" preserveAspectRatio="none"><path d="M0,20 C200,40 400,0 600,20 C800,40 1000,0 1200,20 L1200,40 L0,40 Z" fill="rgba(255,255,255,0.15)"/></svg></div>
+  <div class="wave"><svg viewBox="0 0 1200 40" preserveAspectRatio="none"><path d="M0,25 C150,5 350,45 600,25 C850,5 1050,45 1200,25 L1200,40 L0,40 Z" fill="rgba(255,255,255,0.1)"/></svg></div>
+  <div class="palm left">🌴</div>
+  <div class="palm right">🌴</div>
+  <div class="palm left2">🌴</div>
+  <div class="palm right2">🌴</div>
+  <div class="sand-strip"></div>
+  <div class="hut"></div>
+</div>
+
+<!-- APP -->
 <div class="app">
   <div class="header">
     <div class="header-left">
       <div class="header-logo">V</div>
       <div>
         <div class="header-title">VigilantesVoiceRag</div>
-        <div class="header-sub">Voice & internet-powered assistant</div>
+        <div class="header-sub">Powered by HackerHouse Goa</div>
       </div>
     </div>
-    <button class="tts-toggle" id="ttsToggle" onclick="toggleTTS()">🔊 Voice replies: <strong id="ttsLabel">OFF</strong></button>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span class="hh-badge">🏖️ HH GOA</span>
+      <button class="tts-toggle" id="ttsToggle" onclick="toggleTTS()">🔊 <strong id="ttsLabel">OFF</strong></button>
+    </div>
   </div>
 
   <div class="messages" id="messages">
     <div class="messages-inner" id="inner">
       <div class="welcome" id="welcome">
         <div class="welcome-logo">V</div>
-        <h1>Hi, I'm VigilantesVoiceRag</h1>
-        <p>I search the internet to answer your questions in any language. Use voice or text.</p>
+        <h1>Aloha from VigilantesVoiceRag</h1>
+        <p>Your AI assistant from HackerHouse Goa. Ask me anything — I search the internet and reply in any language.</p>
+        <div class="hh-tag">🌴 Built at HackerHouse Goa</div>
         <div class="langs">
-          <span class="lang-chip active" data-lang="auto">Auto-detect</span>
+          <span class="lang-chip active" data-lang="auto">Auto</span>
           <span class="lang-chip" data-lang="en">English</span>
           <span class="lang-chip" data-lang="hi">हिन्दी</span>
           <span class="lang-chip" data-lang="es">Español</span>
@@ -103,17 +175,12 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
           <span class="lang-chip" data-lang="de">Deutsch</span>
           <span class="lang-chip" data-lang="ja">日本語</span>
           <span class="lang-chip" data-lang="ar">العربية</span>
-          <span class="lang-chip" data-lang="te">తెలుగు</span>
-          <span class="lang-chip" data-lang="ta">தமிழ்</span>
-          <span class="lang-chip" data-lang="bn">বাংলা</span>
-          <span class="lang-chip" data-lang="ko">한국어</span>
         </div>
         <div class="suggestions">
-          <div class="suggestion" onclick="ask(this)">What is the capital of France?</div>
-          <div class="suggestion" onclick="ask(this)">भारत के बारे में बताओ</div>
-          <div class="suggestion" onclick="ask(this)">Qui est Napoléon Bonaparte ?</div>
-          <div class="suggestion" onclick="ask(this)">¿Qué es la inteligencia artificial?</div>
-          <div class="suggestion" onclick="ask(this)">Fill in the blank</div>
+          <div class="suggestion" onclick="ask(this)">What is HackerHouse Goa?</div>
+          <div class="suggestion" onclick="ask(this)">Tell me about SRKR Engineering College</div>
+          <div class="suggestion" onclick="ask(this)">भारत की राजधानी क्या है?</div>
+          <div class="suggestion" onclick="ask(this)">Explain quantum computing</div>
         </div>
       </div>
     </div>
@@ -123,11 +190,11 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
     <div class="input-row">
       <button class="btn-icon btn-voice" id="voiceBtn" onclick="toggleVoice()" title="Speak">🎤</button>
       <div class="input-box">
-        <textarea id="input" rows="1" placeholder="Ask me anything in any language..." onkeydown="onKey(event)" oninput="resize(this)"></textarea>
+        <textarea id="input" rows="1" placeholder="Ask me anything..." onkeydown="onKey(event)" oninput="resize(this)"></textarea>
       </div>
       <button class="btn-icon btn-send" id="sendBtn" onclick="send()" disabled>↑</button>
     </div>
-    <div class="hint">Press Enter to send · Click 🎤 to speak · Toggle 🔊 for voice replies</div>
+    <div class="hint">Press Enter to send · Click 🎤 to speak · 🔊 for voice replies · <a href="https://hhgoa.com" target="_blank">HackerHouse Goa</a></div>
   </div>
 </div>
 
@@ -136,7 +203,6 @@ let ttsEnabled = false, selectedLang = 'auto';
 let recording = false, recog = null;
 const synth = window.speechSynthesis;
 
-// Language chips
 document.querySelectorAll('.lang-chip').forEach(c => {
   c.addEventListener('click', () => {
     document.querySelectorAll('.lang-chip').forEach(x => x.classList.remove('active'));
@@ -165,7 +231,6 @@ function ask(el) {
 function now() { return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
 function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
-// Detect language from text
 function detectLang(text) {
   for (const c of text) {
     const code = c.codePointAt(0);
@@ -176,101 +241,8 @@ function detectLang(text) {
     if (code >= 0x0600 && code <= 0x06FF) return 'ar';
     if (code >= 0x3040 && code <= 0x30FF) return 'ja';
     if (code >= 0xAC00 && code <= 0xD7AF) return 'ko';
-    if (code >= 0x4E00 && code <= 0x9FFF) return 'zh';
-    if (code >= 0x0E00 && code <= 0x0E7F) return 'th';
   }
   return 'en';
-}
-
-// Language names for search
-const langNames = {
-  en: 'English', hi: 'Hindi', es: 'Spanish', fr: 'French', de: 'German',
-  ja: 'Japanese', ar: 'Arabic', te: 'Telugu', ta: 'Tamil', bn: 'Bengali',
-  ko: 'Korean', zh: 'Chinese', th: 'Thai'
-};
-
-// Search via DuckDuckGo Lite (no CORS issues)
-async function searchWeb(query) {
-  // Try server API first (works when running locally or on Vercel)
-  try {
-    const res = await fetch('/api/search', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query }),
-      signal: AbortSignal.timeout(15000)
-    });
-    if (res.ok) {
-      const data = await res.json();
-      if (data.answer && !data.error) {
-        // Store full answer for display
-        window._lastAnswer = data.answer;
-        window._lastSources = data.sources || [];
-        return data.sources || [];
-      }
-    }
-  } catch (e) {
-    console.log('Server API not available, trying direct search...');
-  }
-
-  // Fallback: DuckDuckGo HTML via CORS proxy
-  try {
-    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent('https://html.duckduckgo.com/html/?q=' + encodeURIComponent(query))}`;
-    const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(8000) });
-    const html = await res.text();
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    const results = [];
-    doc.querySelectorAll('.result').forEach(el => {
-      const titleEl = el.querySelector('.result__title a, .result__title');
-      const snippetEl = el.querySelector('.result__snippet');
-      const urlEl = el.querySelector('.result__url');
-      if (titleEl && snippetEl) {
-        results.push({
-          title: titleEl.textContent.trim(),
-          body: snippetEl.textContent.trim(),
-          url: urlEl ? urlEl.textContent.trim() : ''
-        });
-      }
-    });
-    window._lastAnswer = null;
-    window._lastSources = results;
-    return results.slice(0, 5);
-  } catch (e2) {
-    console.log('All search methods failed:', e2);
-    return [];
-  }
-}
-
-// Build answer from search results
-function buildAnswer(query, results) {
-  if (!results.length) return null;
-  const queryWords = query.toLowerCase().split(/\s+/);
-  const stop = new Set(['what','is','the','a','an','who','how','when','where','why','tell','me','about','can','you','do','does','in','on','at','to','for','of','and','or','my','your','this','that','it']);
-  const meaningful = queryWords.filter(w => !stop.has(w) && w.length > 2);
-
-  // Score and sort results
-  const scored = results.map(r => {
-    const text = (r.title + ' ' + r.body).toLowerCase();
-    let score = meaningful.filter(w => text.includes(w)).length;
-    if (/\b(is|are|was|were)\b/.test(text)) score += 2;
-    return { score, ...r };
-  }).sort((a, b) => b.score - a.score);
-
-  // Combine top 3 results
-  const parts = [];
-  const seen = new Set();
-  for (const r of scored.slice(0, 3)) {
-    let body = r.body;
-    // Clean date prefixes
-    body = body.replace(/^\d+\s+(hours?|days?|weeks?|months?|minutes?)\s+ago\s*[-–—]\s*/i, '');
-    body = body.replace(/^(Today|Yesterday)\s*[-–—]\s*/i, '');
-    body = body.replace(/^[A-Z][a-z]+\s+\d{1,2},\s*\d{4}\s*[–—-]\s*/, '');
-    if (body.length > 20 && !seen.has(body.slice(0, 60))) {
-      seen.add(body.slice(0, 60));
-      parts.push(body);
-    }
-  }
-  return parts.length ? parts.join('\n\n') : null;
 }
 
 async function send() {
@@ -287,20 +259,19 @@ async function send() {
   addMsg('user', text);
   const typing = showTyping();
 
-  // Search the internet
-  const results = await searchWeb(text);
-  // Use server answer if available (more complete), otherwise build from results
-  const answer = window._lastAnswer || buildAnswer(text, results);
-  const sources = window._lastSources || results;
-  window._lastAnswer = null;
-  window._lastSources = null;
-
-  typing.remove();
-
-  if (answer) {
-    addBotMsg(answer, sources);
-  } else {
-    addBotMsg("I couldn't find a good answer for that. Could you try rephrasing?", []);
+  try {
+    const res = await fetch('/api/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: text }),
+      signal: AbortSignal.timeout(15000)
+    });
+    const data = await res.json();
+    typing.remove();
+    addBotMsg(data.answer || "I couldn't find an answer.", data.sources || []);
+  } catch (e) {
+    typing.remove();
+    addBotMsg("Connection error. Please try again.", []);
   }
 }
 
@@ -315,16 +286,16 @@ function addMsg(role, text) {
   scroll();
 }
 
-function addBotMsg(answer, results) {
+function addBotMsg(answer, sources) {
   const inner = document.getElementById('inner');
   const div = document.createElement('div');
   div.className = 'msg bot';
   const ttsId = 'tts_' + Date.now();
 
   let sourcesHtml = '';
-  if (results.length) {
+  if (sources.length) {
     sourcesHtml = '<div class="sources-list">';
-    results.slice(0, 3).forEach(r => {
+    sources.slice(0, 3).forEach(r => {
       if (r.url) sourcesHtml += `<a href="${esc(r.url)}" target="_blank">🔗 ${esc(r.title)}</a>`;
     });
     sourcesHtml += '</div>';
@@ -342,7 +313,6 @@ function addBotMsg(answer, results) {
     </div>`;
   inner.appendChild(div);
   scroll();
-
   if (ttsEnabled) setTimeout(() => speak(null, answer), 300);
 }
 
@@ -361,12 +331,11 @@ function scroll() {
   setTimeout(() => m.scrollTop = m.scrollHeight, 50);
 }
 
-// TEXT-TO-SPEECH
 function speak(btn, text) {
   synth.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
   const lang = selectedLang === 'auto' ? detectLang(text) : selectedLang;
-  const langMap = { en:'en-US', hi:'hi-IN', es:'es-ES', fr:'fr-FR', de:'de-DE', ja:'ja-JP', ar:'ar-SA', te:'te-IN', ta:'ta-IN', bn:'bn-BD', ko:'ko-KR', zh:'zh-CN' };
+  const langMap = { en:'en-US', hi:'hi-IN', es:'es-ES', fr:'fr-FR', de:'de-DE', ja:'ja-JP', ar:'ar-SA', te:'te-IN', ta:'ta-IN', bn:'bn-BD', ko:'ko-KR' };
   utterance.lang = langMap[lang] || 'en-US';
   utterance.rate = 1.0;
   if (btn) {
@@ -377,7 +346,6 @@ function speak(btn, text) {
   synth.speak(utterance);
 }
 
-// VOICE INPUT
 function toggleVoice() { recording ? stopRec() : startRec(); }
 function startRec() {
   if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) { alert('Voice not supported. Try Chrome.'); return; }
@@ -397,7 +365,7 @@ function stopRec() {
   recording = false;
   document.getElementById('voiceBtn').classList.remove('recording');
   document.getElementById('voiceBtn').textContent = '🎤';
-  document.getElementById('input').placeholder = 'Ask me anything in any language...';
+  document.getElementById('input').placeholder = 'Ask me anything...';
   if (recog) try { recog.stop(); } catch(e) {}
 }
 
