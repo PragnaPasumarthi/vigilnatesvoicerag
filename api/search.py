@@ -1,9 +1,11 @@
 """
 Vercel serverless function for internet search.
+Uses WSGI-compatible handler.
 """
 import json
 import re
 import time
+import os
 
 try:
     from ddgs import DDGS
@@ -13,8 +15,11 @@ except ImportError:
 _ddgs = None
 
 
-def handler(request, response):
-    """Vercel Python handler."""
+def app(environ, start_response):
+    """WSGI application for Vercel."""
+    method = environ.get("REQUEST_METHOD", "GET")
+    path = environ.get("PATH_INFO", "/")
+
     headers = {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -22,26 +27,25 @@ def handler(request, response):
         "Content-Type": "application/json; charset=utf-8",
     }
 
-    if request.method == "OPTIONS":
-        response.status_code = 204
-        for k, v in headers.items():
-            response.headers[k] = v
-        return
+    if method == "OPTIONS":
+        start_response("204 No Content", list(headers.items()))
+        return [b""]
 
-    if request.method != "POST":
-        response.status_code = 405
-        response.headers.update(headers)
-        response.body = json.dumps({"error": "Method not allowed"})
-        return
+    if method != "POST" or path != "/api/search":
+        body = json.dumps({"error": "Not found"}).encode()
+        start_response("404 Not Found", list(headers.items()))
+        return [body]
 
     try:
-        body = json.loads(request.body)
-        query = body.get("query", "").strip()
+        content_length = int(environ.get("CONTENT_LENGTH", 0))
+        request_body = environ["wsgi.input"].read(content_length)
+        data = json.loads(request_body)
+        query = data.get("query", "").strip()
+
         if not query:
-            response.status_code = 200
-            response.headers.update(headers)
-            response.body = json.dumps({"error": "Empty query", "answer": "Please ask a question."})
-            return
+            body = json.dumps({"answer": "Please ask a question."}).encode()
+            start_response("200 OK", list(headers.items()))
+            return [body]
 
         global _ddgs
         if _ddgs is None:
@@ -61,18 +65,19 @@ def handler(request, response):
 
         answer = _build_answer(query, results)
 
-        response.status_code = 200
-        response.headers.update(headers)
-        response.body = json.dumps({
+        response = {
             "answer": answer or "I couldn't find a good answer. Try rephrasing.",
             "sources": [{"title": r["title"], "url": r["url"], "body": r["body"][:200]} for r in results[:3]],
             "latency_ms": round(ms, 1),
-        }, ensure_ascii=False)
+        }
+        body = json.dumps(response, ensure_ascii=False).encode()
+        start_response("200 OK", list(headers.items()))
+        return [body]
 
     except Exception as e:
-        response.status_code = 200
-        response.headers.update(headers)
-        response.body = json.dumps({"error": str(e), "answer": f"Search error: {e}"})
+        body = json.dumps({"error": str(e), "answer": f"Search error: {e}"}).encode()
+        start_response("200 OK", list(headers.items()))
+        return [body]
 
 
 def _build_answer(query, results):
