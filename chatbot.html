@@ -17,16 +17,15 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 .header-title{font-weight:700;font-size:1rem}
 .header-sub{font-size:0.75rem;color:var(--text3)}
 .tts-toggle{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--white);cursor:pointer;font-size:0.78rem;color:var(--text2);transition:all .2s}
-.tts-toggle:hover{border-color:var(--accent);color:var(--accent)}
-.tts-toggle.active{background:var(--accent-light);border-color:var(--accent);color:var(--accent)}
+.tts-toggle:hover,.tts-toggle.active{border-color:var(--accent);color:var(--accent);background:#fdf5f0}
 .messages{flex:1;overflow-y:auto;padding:24px 20px;scroll-behavior:smooth}
 .messages-inner{max-width:700px;margin:0 auto}
 .welcome{text-align:center;padding:60px 20px 40px}
 .welcome-logo{width:64px;height:64px;background:var(--accent);border-radius:20px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:28px;font-weight:800;margin:0 auto 20px}
 .welcome h1{font-size:1.6rem;font-weight:700;margin-bottom:8px}
 .welcome p{color:var(--text2);font-size:0.95rem;line-height:1.6;max-width:440px;margin:0 auto}
-.welcome .langs{display:flex;gap:6px;justify-content:center;margin-top:16px;flex-wrap:wrap}
-.lang-chip{padding:4px 10px;border-radius:6px;font-size:0.72rem;font-weight:600;background:var(--bg);color:var(--text3);cursor:pointer;transition:all .2s;border:1px solid transparent}
+.langs{display:flex;gap:6px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.lang-chip{padding:5px 12px;border-radius:8px;font-size:0.75rem;font-weight:600;background:var(--bg);color:var(--text3);cursor:pointer;transition:all .2s;border:1px solid transparent}
 .lang-chip:hover,.lang-chip.active{background:var(--accent-light);color:var(--accent);border-color:var(--accent)}
 .suggestions{display:flex;flex-direction:column;gap:8px;max-width:440px;margin:24px auto 0}
 .suggestion{padding:12px 18px;border:1px solid var(--border);border-radius:12px;font-size:0.88rem;cursor:pointer;transition:all .2s;color:var(--text);text-align:left;background:var(--white)}
@@ -37,22 +36,20 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 .msg .avatar{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;font-weight:700;margin-top:2px}
 .msg.user .avatar{background:var(--user-bg);color:#fff}
 .msg.bot .avatar{background:#e8f5f0;color:#1a7a6d}
-.msg .content{max-width:80%;line-height:1.7;font-size:0.93rem}
+.msg .content{max-width:82%;line-height:1.7;font-size:0.93rem}
 .msg.user .content{text-align:right}
-.msg .bubble{padding:12px 16px;border-radius:16px;display:inline-block;text-align:left;max-width:100%;word-wrap:break-word}
+.msg .bubble{padding:14px 18px;border-radius:16px;display:inline-block;text-align:left;max-width:100%;word-wrap:break-word}
 .msg.user .bubble{background:var(--user-bg);color:#fff;border-bottom-right-radius:4px}
 .msg.bot .bubble{background:var(--bot-bg);color:var(--text);border:1px solid var(--border);border-bottom-left-radius:4px}
 .msg .meta-row{display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap}
 .msg.user .meta-row{justify-content:flex-end}
 .msg .time{font-size:0.7rem;color:var(--text3)}
-.msg .source-badge{font-size:0.68rem;padding:2px 7px;border-radius:5px;background:var(--bg);color:var(--text3);display:flex;align-items:center;gap:3px}
-.msg .source-badge.web{background:#e8f0f8;color:#3a6ea5}
-.msg .source-badge.local{background:#e8f3eb;color:#4a8c5c}
+.source-badge{font-size:0.68rem;padding:2px 7px;border-radius:5px;background:#e8f0f8;color:#3a6ea5;display:flex;align-items:center;gap:3px}
 .tts-btn{width:26px;height:26px;border-radius:6px;border:1px solid var(--border);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .2s;color:var(--text3)}
 .tts-btn:hover{border-color:var(--accent);color:var(--accent)}
 .tts-btn.speaking{background:var(--accent);color:#fff;border-color:var(--accent)}
-.sources-list{margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
-.sources-list a{display:block;font-size:0.75rem;color:var(--accent);text-decoration:none;padding:3px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sources-list{margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.sources-list a{display:block;font-size:0.78rem;color:var(--accent);text-decoration:none;padding:3px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sources-list a:hover{text-decoration:underline}
 .typing{display:flex;gap:12px;margin-bottom:24px;animation:fadeIn .3s}
 .typing .avatar{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;font-weight:700;background:#e8f5f0;color:#1a7a6d}
@@ -96,22 +93,27 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
       <div class="welcome" id="welcome">
         <div class="welcome-logo">V</div>
         <h1>Hi, I'm vigilnatesvoicerag</h1>
-        <p>I search the internet and my knowledge base to answer your questions. Works in multiple languages. Use voice or text.</p>
+        <p>I search the internet to answer your questions in any language. Use voice or text.</p>
         <div class="langs">
           <span class="lang-chip active" data-lang="auto">Auto-detect</span>
           <span class="lang-chip" data-lang="en">English</span>
-          <span class="lang-chip" data-lang="hi">Hindi</span>
-          <span class="lang-chip" data-lang="es">Spanish</span>
-          <span class="lang-chip" data-lang="fr">French</span>
-          <span class="lang-chip" data-lang="de">German</span>
-          <span class="lang-chip" data-lang="ja">Japanese</span>
-          <span class="lang-chip" data-lang="ar">Arabic</span>
+          <span class="lang-chip" data-lang="hi">हिन्दी</span>
+          <span class="lang-chip" data-lang="es">Español</span>
+          <span class="lang-chip" data-lang="fr">Français</span>
+          <span class="lang-chip" data-lang="de">Deutsch</span>
+          <span class="lang-chip" data-lang="ja">日本語</span>
+          <span class="lang-chip" data-lang="ar">العربية</span>
+          <span class="lang-chip" data-lang="te">తెలుగు</span>
+          <span class="lang-chip" data-lang="ta">தமிழ்</span>
+          <span class="lang-chip" data-lang="bn">বাংলা</span>
+          <span class="lang-chip" data-lang="ko">한국어</span>
         </div>
         <div class="suggestions">
           <div class="suggestion" onclick="ask(this)">What is the capital of France?</div>
-          <div class="suggestion" onclick="ask(this)">Explain quantum computing in simple terms</div>
-          <div class="suggestion" onclick="ask(this)">What is the weather today?</div>
-          <div class="suggestion" onclick="ask(this)">Latest news in AI technology</div>
+          <div class="suggestion" onclick="ask(this)">भारत के बारे में बताओ</div>
+          <div class="suggestion" onclick="ask(this)">Qui est Napoléon Bonaparte ?</div>
+          <div class="suggestion" onclick="ask(this)">¿Qué es la inteligencia artificial?</div>
+          <div class="suggestion" onclick="ask(this)">Fill in the blank</div>
         </div>
       </div>
     </div>
@@ -121,7 +123,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
     <div class="input-row">
       <button class="btn-icon btn-voice" id="voiceBtn" onclick="toggleVoice()" title="Speak">🎤</button>
       <div class="input-box">
-        <textarea id="input" rows="1" placeholder="Ask me anything..." onkeydown="onKey(event)" oninput="resize(this)"></textarea>
+        <textarea id="input" rows="1" placeholder="Ask me anything in any language..." onkeydown="onKey(event)" oninput="resize(this)"></textarea>
       </div>
       <button class="btn-icon btn-send" id="sendBtn" onclick="send()" disabled>↑</button>
     </div>
@@ -130,18 +132,16 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 </div>
 
 <script>
-const API = '/api/chat';
+let ttsEnabled = false, selectedLang = 'auto';
 let recording = false, recog = null;
-let ttsEnabled = false;
-let selectedLang = 'auto';
 const synth = window.speechSynthesis;
 
-// Language chip selection
-document.querySelectorAll('.lang-chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    document.querySelectorAll('.lang-chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    selectedLang = chip.dataset.lang;
+// Language chips
+document.querySelectorAll('.lang-chip').forEach(c => {
+  c.addEventListener('click', () => {
+    document.querySelectorAll('.lang-chip').forEach(x => x.classList.remove('active'));
+    c.classList.add('active');
+    selectedLang = c.dataset.lang;
   });
 });
 
@@ -156,21 +156,102 @@ function resize(el) {
   el.style.height = Math.min(el.scrollHeight, 100) + 'px';
   document.getElementById('sendBtn').disabled = !el.value.trim();
 }
-function onKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
-}
+function onKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }
 function ask(el) {
   document.getElementById('input').value = el.textContent;
   resize(document.getElementById('input'));
   send();
 }
-function now() {
-  return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+function now() { return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+// Detect language from text
+function detectLang(text) {
+  for (const c of text) {
+    const code = c.codePointAt(0);
+    if (code >= 0x0900 && code <= 0x097F) return 'hi';
+    if (code >= 0x0B80 && code <= 0x0BFF) return 'ta';
+    if (code >= 0x0C00 && code <= 0x0C7F) return 'te';
+    if (code >= 0x0980 && code <= 0x09FF) return 'bn';
+    if (code >= 0x0600 && code <= 0x06FF) return 'ar';
+    if (code >= 0x3040 && code <= 0x30FF) return 'ja';
+    if (code >= 0xAC00 && code <= 0xD7AF) return 'ko';
+    if (code >= 0x4E00 && code <= 0x9FFF) return 'zh';
+    if (code >= 0x0E00 && code <= 0x0E7F) return 'th';
+  }
+  return 'en';
 }
-function esc(s) {
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
+
+// Language names for search
+const langNames = {
+  en: 'English', hi: 'Hindi', es: 'Spanish', fr: 'French', de: 'German',
+  ja: 'Japanese', ar: 'Arabic', te: 'Telugu', ta: 'Tamil', bn: 'Bengali',
+  ko: 'Korean', zh: 'Chinese', th: 'Thai'
+};
+
+// Search via DuckDuckGo Lite (no CORS issues)
+async function searchWeb(query) {
+  try {
+    const lang = selectedLang === 'auto' ? detectLang(query) : selectedLang;
+    const langName = langNames[lang] || 'English';
+    // Use DuckDuckGo HTML search via a CORS proxy
+    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent('https://html.duckduckgo.com/html/?q=' + encodeURIComponent(query))}`;
+    const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(8000) });
+    const html = await res.text();
+
+    // Parse results from DuckDuckGo HTML
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const results = [];
+    doc.querySelectorAll('.result').forEach(el => {
+      const titleEl = el.querySelector('.result__title a, .result__title');
+      const snippetEl = el.querySelector('.result__snippet');
+      const urlEl = el.querySelector('.result__url');
+      if (titleEl && snippetEl) {
+        results.push({
+          title: titleEl.textContent.trim(),
+          body: snippetEl.textContent.trim(),
+          url: urlEl ? urlEl.textContent.trim() : ''
+        });
+      }
+    });
+    return results.slice(0, 5);
+  } catch (e) {
+    console.log('Search error:', e);
+    return [];
+  }
+}
+
+// Build answer from search results
+function buildAnswer(query, results) {
+  if (!results.length) return null;
+  const queryWords = query.toLowerCase().split(/\s+/);
+  const stop = new Set(['what','is','the','a','an','who','how','when','where','why','tell','me','about','can','you','do','does','in','on','at','to','for','of','and','or','my','your','this','that','it']);
+  const meaningful = queryWords.filter(w => !stop.has(w) && w.length > 2);
+
+  // Score and sort results
+  const scored = results.map(r => {
+    const text = (r.title + ' ' + r.body).toLowerCase();
+    let score = meaningful.filter(w => text.includes(w)).length;
+    if (/\b(is|are|was|were)\b/.test(text)) score += 2;
+    return { score, ...r };
+  }).sort((a, b) => b.score - a.score);
+
+  // Combine top 3 results
+  const parts = [];
+  const seen = new Set();
+  for (const r of scored.slice(0, 3)) {
+    let body = r.body;
+    // Clean date prefixes
+    body = body.replace(/^\d+\s+(hours?|days?|weeks?|months?|minutes?)\s+ago\s*[-–—]\s*/i, '');
+    body = body.replace(/^(Today|Yesterday)\s*[-–—]\s*/i, '');
+    body = body.replace(/^[A-Z][a-z]+\s+\d{1,2},\s*\d{4}\s*[–—-]\s*/, '');
+    if (body.length > 20 && !seen.has(body.slice(0, 60))) {
+      seen.add(body.slice(0, 60));
+      parts.push(body);
+    }
+  }
+  return parts.length ? parts.join('\n\n') : null;
 }
 
 async function send() {
@@ -180,7 +261,6 @@ async function send() {
 
   const w = document.getElementById('welcome');
   if (w) w.remove();
-
   input.value = '';
   input.style.height = 'auto';
   document.getElementById('sendBtn').disabled = true;
@@ -188,82 +268,59 @@ async function send() {
   addMsg('user', text);
   const typing = showTyping();
 
-  try {
-    const res = await fetch(API, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: text, language: selectedLang })
-    });
-    const data = await res.json();
-    typing.remove();
-    addMsg('bot', data);
-  } catch (err) {
-    typing.remove();
-    addMsg('bot', { answer: 'Connection error. Please try again.', sources: [], answer_type: 'error' });
+  // Search the internet
+  const results = await searchWeb(text);
+  const answer = buildAnswer(text, results);
+
+  typing.remove();
+
+  if (answer) {
+    addBotMsg(answer, results);
+  } else {
+    addBotMsg("I couldn't find a good answer for that. Could you try rephrasing?", []);
   }
 }
 
-function addMsg(role, data) {
+function addMsg(role, text) {
   const inner = document.getElementById('inner');
   const div = document.createElement('div');
   div.className = `msg ${role}`;
-
   if (role === 'user') {
-    div.innerHTML = `
-      <div class="avatar">👤</div>
-      <div class="content">
-        <div class="bubble">${esc(typeof data === 'string' ? data : data.answer)}</div>
-        <div class="meta-row"><span class="time">${now()}</span></div>
-      </div>`;
-  } else {
-    const answer = typeof data === 'string' ? data : (data.answer || 'No answer.');
-    const sources = data.sources || [];
-    const answerType = data.answer_type || 'unknown';
-    const lang = data.language || 'en';
-
-    // Source badge
-    let badgeHtml = '';
-    if (answerType === 'internet') {
-      badgeHtml = '<span class="source-badge web">🌐 Internet</span>';
-    } else if (answerType === 'rag') {
-      badgeHtml = '<span class="source-badge local">📚 Knowledge base</span>';
-    }
-
-    // TTS button
-    const ttsId = 'tts_' + Date.now();
-    const ttsHtml = `<button class="tts-btn" id="${ttsId}" onclick="speakText(this, '${esc(answer).replace(/'/g, "\\'")}', '${lang}')" title="Listen">🔊</button>`;
-
-    // Sources links
-    let sourcesHtml = '';
-    if (sources.length > 0) {
-      sourcesHtml = '<div class="sources-list">';
-      sources.forEach(s => {
-        if (s.url) {
-          sourcesHtml += `<a href="${esc(s.url)}" target="_blank" rel="noopener">🔗 ${esc(s.title || s.url)}</a>`;
-        }
-      });
-      sourcesHtml += '</div>';
-    }
-
-    div.innerHTML = `
-      <div class="avatar">V</div>
-      <div class="content">
-        <div class="bubble">${esc(answer).replace(/\n/g, '<br>')}${sourcesHtml}</div>
-        <div class="meta-row">
-          <span class="time">${now()}</span>
-          ${badgeHtml}
-          ${ttsHtml}
-        </div>
-      </div>`;
-
-    // Auto-speak if TTS is enabled
-    if (ttsEnabled) {
-      setTimeout(() => speakText(null, answer, lang), 300);
-    }
+    div.innerHTML = `<div class="avatar">👤</div><div class="content"><div class="bubble">${esc(text)}</div><div class="meta-row"><span class="time">${now()}</span></div></div>`;
   }
-
   inner.appendChild(div);
   scroll();
+}
+
+function addBotMsg(answer, results) {
+  const inner = document.getElementById('inner');
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  const ttsId = 'tts_' + Date.now();
+
+  let sourcesHtml = '';
+  if (results.length) {
+    sourcesHtml = '<div class="sources-list">';
+    results.slice(0, 3).forEach(r => {
+      if (r.url) sourcesHtml += `<a href="${esc(r.url)}" target="_blank">🔗 ${esc(r.title)}</a>`;
+    });
+    sourcesHtml += '</div>';
+  }
+
+  div.innerHTML = `
+    <div class="avatar">V</div>
+    <div class="content">
+      <div class="bubble">${esc(answer).replace(/\n/g, '<br>')}${sourcesHtml}</div>
+      <div class="meta-row">
+        <span class="time">${now()}</span>
+        <span class="source-badge">🌐 Internet</span>
+        <button class="tts-btn" id="${ttsId}" onclick="speak(this,'${esc(answer).replace(/'/g,"\\'").replace(/\n/g," ")}')">🔊</button>
+      </div>
+    </div>`;
+  inner.appendChild(div);
+  scroll();
+
+  if (ttsEnabled) setTimeout(() => speak(null, answer), 300);
 }
 
 function showTyping() {
@@ -282,64 +339,33 @@ function scroll() {
 }
 
 // TEXT-TO-SPEECH
-function speakText(btn, text, lang) {
-  synth.cancel(); // Stop any current speech
-
+function speak(btn, text) {
+  synth.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
-
-  // Map language codes
-  const langMap = {
-    'en': 'en-US', 'hi': 'hi-IN', 'es': 'es-ES', 'fr': 'fr-FR',
-    'de': 'de-DE', 'ja': 'ja-JP', 'ar': 'ar-SA', 'bn': 'bn-BD',
-    'ta': 'ta-IN', 'te': 'te-IN', 'zh': 'zh-CN', 'ko': 'ko-KR',
-    'pt': 'pt-BR', 'ru': 'ru-RU', 'it': 'it-IT'
-  };
+  const lang = selectedLang === 'auto' ? detectLang(text) : selectedLang;
+  const langMap = { en:'en-US', hi:'hi-IN', es:'es-ES', fr:'fr-FR', de:'de-DE', ja:'ja-JP', ar:'ar-SA', te:'te-IN', ta:'ta-IN', bn:'bn-BD', ko:'ko-KR', zh:'zh-CN' };
   utterance.lang = langMap[lang] || 'en-US';
   utterance.rate = 1.0;
-  utterance.pitch = 1.0;
-
   if (btn) {
     btn.classList.add('speaking');
     utterance.onend = () => btn.classList.remove('speaking');
     utterance.onerror = () => btn.classList.remove('speaking');
   }
-
   synth.speak(utterance);
 }
 
-// VOICE INPUT (STT)
-function toggleVoice() {
-  recording ? stopRec() : startRec();
-}
+// VOICE INPUT
+function toggleVoice() { recording ? stopRec() : startRec(); }
 function startRec() {
-  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-    alert('Voice input not supported. Try Chrome.');
-    return;
-  }
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) { alert('Voice not supported. Try Chrome.'); return; }
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   recog = new SR();
   recog.continuous = false;
   recog.interimResults = false;
-
-  // Set language based on selection
-  const langMap = {
-    'auto': 'en-US', 'en': 'en-US', 'hi': 'hi-IN', 'es': 'es-ES',
-    'fr': 'fr-FR', 'de': 'de-DE', 'ja': 'ja-JP', 'ar': 'ar-SA'
-  };
+  const langMap = { auto:'en-US', en:'en-US', hi:'hi-IN', es:'es-ES', fr:'fr-FR', de:'de-DE', ja:'ja-JP', ar:'ar-SA', te:'te-IN', ta:'ta-IN', bn:'bn-BD', ko:'ko-KR' };
   recog.lang = langMap[selectedLang] || 'en-US';
-
-  recog.onstart = () => {
-    recording = true;
-    document.getElementById('voiceBtn').classList.add('recording');
-    document.getElementById('voiceBtn').textContent = '⏹';
-    document.getElementById('input').placeholder = 'Listening...';
-  };
-  recog.onresult = (e) => {
-    const transcript = e.results[0][0].transcript;
-    document.getElementById('input').value = transcript;
-    resize(document.getElementById('input'));
-    setTimeout(() => send(), 200);
-  };
+  recog.onstart = () => { recording = true; document.getElementById('voiceBtn').classList.add('recording'); document.getElementById('voiceBtn').textContent = '⏹'; document.getElementById('input').placeholder = 'Listening...'; };
+  recog.onresult = (e) => { document.getElementById('input').value = e.results[0][0].transcript; resize(document.getElementById('input')); setTimeout(() => send(), 200); };
   recog.onend = stopRec;
   recog.onerror = stopRec;
   recog.start();
@@ -348,7 +374,7 @@ function stopRec() {
   recording = false;
   document.getElementById('voiceBtn').classList.remove('recording');
   document.getElementById('voiceBtn').textContent = '🎤';
-  document.getElementById('input').placeholder = 'Ask me anything...';
+  document.getElementById('input').placeholder = 'Ask me anything in any language...';
   if (recog) try { recog.stop(); } catch(e) {}
 }
 
