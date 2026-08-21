@@ -114,10 +114,34 @@ def app(environ, start_response):
                     "url": item.get("href", ""),
                 })
 
-        # Fetch full content from top result
+        # Score results by relevance to query
+        query_lower = query.lower()
+        query_words = set(query_lower.split())
+        for r in results:
+            title_lower = r.get("title", "").lower()
+            body_lower = r.get("body", "").lower()
+            score = 0
+            # Exact phrase match in title is highest signal
+            if query_lower in title_lower:
+                score += 10
+            # Query words in title
+            score += sum(2 for w in query_words if w in title_lower)
+            # Query words in body
+            score += sum(1 for w in query_words if w in body_lower)
+            r["_score"] = score
+
+        # Sort by relevance
+        results.sort(key=lambda x: -x.get("_score", 0))
+
+        # Fetch full content from most relevant result
         full_content = None
-        if results and results[0].get("url"):
-            full_content = fetch_page_content(results[0]["url"])
+        best_url = None
+        for r in results:
+            if r.get("url") and r.get("_score", 0) > 0:
+                full_content = fetch_page_content(r["url"])
+                if full_content and len(full_content) > 200:
+                    best_url = r["url"]
+                    break
 
         ms = (time.perf_counter() - t0) * 1000
 
