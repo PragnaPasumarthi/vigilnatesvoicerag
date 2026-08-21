@@ -260,7 +260,7 @@ async function send() {
   const typing = showTyping();
 
   try {
-    const res = await fetch('/api/search', {
+    const res = await fetch('https://vigilnatesvoicerag.vercel.app/api/search', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query: text }),
